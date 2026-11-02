@@ -3,12 +3,12 @@
 
 #define MAX_MSG_QUEUES	8
 #define MAX_MSG			16
-#define MSGMAX			64
+#define MAX_MSG_SIZE	64
 
 struct msg {
 	int type;
 	unsigned size;
-	unsigned char buf[MSGMAX];
+	unsigned char buf[MAX_MSG_SIZE];
 };
 
 struct msg_queue {
