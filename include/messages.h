@@ -21,7 +21,7 @@ struct msg_queue {
 };
 
 int sys_msgget(int key);
-int sys_msgsnd(int key, const void *buf, unsigned size, int type);
-int sys_msgrcv(int key, void *buf, unsigned size, int type);
+int sys_msgsnd(int qid, const void *buf, unsigned size, int type);
+int sys_msgrcv(int qid, void *buf, unsigned size, int type);
 
 #endif //MESSAGE_H
