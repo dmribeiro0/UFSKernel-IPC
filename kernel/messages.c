@@ -57,7 +57,6 @@ int _send_error_cases(int qid, unsigned size, const void *buf) {
     return 1;
   }
 
-  const unsigned char *bytes = buf;
   if (!buf) {
     kprintf("ERRO NO ENVIO DE MENSAGEM: buffer com conteudo ausente.\n", (int) MAX_MSG_SIZE);
     return 1;
