@@ -79,10 +79,7 @@ int _get_msg_index(int qid) {
 }
 
 int _insert_msg(int qid, struct msg temp_msg) {
-  if (_send_error_cases(qid)) {
-    kprintf("Mensagem %d nao enviada", qid);
-    return -1;
-  }
+  if (_send_error_cases(qid)) return -1;
 
   /* tenta inserir a mensagem na fila */
   int msg_index = _get_msg_index(qid);
@@ -113,6 +110,9 @@ int sys_msgsnd(int qid, const void *buf, unsigned size, int type) {
   /* tenta inserir a mensagem na fila */
   int out = _insert_msg(qid, temp_msg);
   #pragma endregion
+
+  if (out == -1)
+    kprintf("Mensagem %d nao enviada", qid);
 
   return out;
 }
