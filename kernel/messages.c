@@ -56,15 +56,11 @@ int _msg_error_cases(unsigned size, const void *buf) {
 }
 
 int _send_error_cases(int qid) {
-  if (qid == -1) {
-    kprintf("ERRO NO ENVIO DE MENSAGEM: tabela cheia.\n");
-    return 1;
-  }
+  /* ERRO NO ENVIO DE MENSAGEM: tabela cheia */
+  if (qid == -1) return 1;
 
-  if (msg_queues[qid].count == MAX_MSG) {
-    kprintf("ERRO NO ENVIO DE MENSAGEM: fila %d atingiu o maximo de mensagens.\n", qid);
-    return 1;
-  }
+  /* ERRO NO ENVIO DE MENSAGEM: fila (qid) atingiu o maximo de mensagens */
+  if (msg_queues[qid].count == MAX_MSG) return 1;
 
   return 0;
 }
@@ -78,12 +74,15 @@ int _get_msg_index(int qid) {
   return msg_index;
 }
 
-int _insert_msg(int qid, struct msg temp_msg) {
+int _insert_msg(int qid, struct msg *temp_msg) {
   if (_send_error_cases(qid)) return -1;
 
   /* tenta inserir a mensagem na fila */
   int msg_index = _get_msg_index(qid);
-  msg_queues[qid].msgs[msg_index] = temp_msg;
+  msg_queues[qid].msgs[msg_index].size = temp_msg->size;
+  msg_queues[qid].msgs[msg_index].type = temp_msg->type;
+  for (unsigned i = 0; i < temp_msg->size; i++)
+    msg_queues[qid].msgs[msg_index].buf[i] = temp_msg->buf[i];
 
   msg_queues[qid].count++;
   msg_queues[qid].tail = msg_index + 1;
@@ -108,7 +107,7 @@ int sys_msgsnd(int qid, const void *buf, unsigned size, int type) {
 
   #pragma region SECAO_CRITICA
   /* tenta inserir a mensagem na fila */
-  int out = _insert_msg(qid, temp_msg);
+  int out = _insert_msg(qid, &temp_msg);
   #pragma endregion
 
   if (out == -1)
